@@ -1,6 +1,10 @@
 import { generateToken } from '../lib/utils.js';
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
+import { sendWelcomeEmail } from '../emails/emailHandlers.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const signup = async (req, res) => {
     const { fullName, email, password } = req.body; // get data from request body
@@ -37,19 +41,25 @@ export const signup = async (req, res) => {
         })
 
         if (newUser) {
-            // generate JWT token for user
-            // generateToken(newUser._id, res)
-            // await newUser.save();
             // Persist user first, then issue auth token
             const savedUser = await newUser.save();
             generateToken(savedUser._id, res);
             
+            try {
+                // Send welcome email
+                await sendWelcomeEmail(savedUser.email, savedUser.fullName, process.env.CLIENT_URL);
+                console.log("Welcome email sent successfully to:", savedUser.email);
+            } catch (error) {
+                console.error("Error sending welcome email:", error);
+                // Don't fail the signup if email fails - just log it
+            }
+            
             return res.status(201).json({
-                _id: newUser._id,
-                fullName: newUser.fullName,
-                email: newUser.email,
-                profilePic: newUser.profilePic
-            })
+                _id: savedUser._id,
+                fullName: savedUser.fullName,
+                email: savedUser.email,
+                profilePic: savedUser.profilePic
+            });
         }
         else {
             res.status(400).json({ message: "Invalid user details!" });
