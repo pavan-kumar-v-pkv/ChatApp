@@ -8,5 +8,8 @@ export const ENV = {
     RESEND_API_KEY: process.env.RESEND_API_KEY || 're_5NxpS5Hp_AEB56eQibKKVfinkWZTPC9iy',
     EMAIL_FROM: process.env.EMAIL_FROM || 'onboarding@resend.dev',
     EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || 'Pavan Kumar V',
-    CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173'
+    CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 }
